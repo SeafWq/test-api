@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавление пользователя</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        .container {
+            width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .message {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .success {
+            background-color: #dff0d8; /* Light green */
+            color: #3c763d; /* Dark green */
+        }
+        .error {
+            background-color: #f2dede; /* Light red */
+            color: #a94442; /* Dark red */
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Добавить пользователя</h2>
+    <form id="userForm">
+        <label for="name">Имя:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <button type="submit">Добавить</button>
+    </form>
+
+    <div class="message" id="message"></div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $("#userForm").submit(function(event) {
+            event.preventDefault();
+
+            var name = $("#name").val();
+            var email = $("#email").val();
+
+            $.ajax({
+                url: "https://test-task.ru/users",
+                method: "POST",
+                data: { name: name, email: email },
+                dataType: "json",
+                success: function(response) {
+                    if (response.status) {
+                        $("#message").html(`<div class="success">${response.message}</div>`);
+                        $("#userForm")[0].reset();
+                    } else {
+                        $("#message").html(`<div class="error">${response.message}</div>`);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    $("#message").html(`<div class="error">Error: ${error}</div>`);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
